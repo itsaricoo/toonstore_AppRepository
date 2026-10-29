@@ -1,0 +1,41 @@
+# Voorbeeld-automation voor Home Assistant (automations.yaml).
+# Stel in de Kookwekker-app bij Instellingen in:
+#   Adres:      het adres van je Home Assistant, bijv. 192.168.1.10:8123
+#   Webhook-id: kookwekker   (moet gelijk zijn aan webhook_id hieronder)
+#
+# De Toon stuurt een POST met JSON, beschikbaar als trigger.json:
+#   event:   started | finished | dismissed | cancelled | extended | test
+#   label:   naam van de timer (bijv. "Pasta")
+#   color:   kleur van de timer (hex)
+#   seconds: ingestelde duur in seconden
+#   active:  aantal nog lopende timers
+
+- alias: "Kookwekker (Toon)"
+  mode: queued
+  trigger:
+    - platform: webhook
+      webhook_id: kookwekker
+      allowed_methods:
+        - POST
+      local_only: true
+  action:
+    - choose:
+        # Timer is afgelopen
+        - conditions: "{{ trigger.json.event == 'finished' }}"
+          sequence:
+            - service: notify.notify   # vervang door je eigen notify-service
+              data:
+                title: "Kookwekker"
+                message: "{{ trigger.json.label }} is klaar!"
+            - service: light.turn_on   # alleen lampen die 'flash' ondersteunen
+              target:
+                entity_id: light.keuken
+              data:
+                flash: long
+        # Alarm is op de Toon uitgezet
+        - conditions: "{{ trigger.json.event == 'dismissed' }}"
+          sequence:
+            - service: logbook.log
+              data:
+                name: "Kookwekker"
+                message: "{{ trigger.json.label }} afgehandeld"
