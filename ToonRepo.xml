@@ -12,4 +12,17 @@
 		<toon2only>no</toon2only>
 		<allowdeletion>no</allowdeletion>
 	</app>
+	<app>
+		<name>Kookwekker</name>
+		<version>1.0.0</version> 
+		<folder>kookwekker</folder>
+		<description>Kookwekker voor de rooted Toon</description>
+		<author>ItsaRicooo</author>
+		<skipautoupdate>yes</skipautoupdate>
+		<screenshots>5</screenshots>
+		<firmwareminimum>5.00.0</firmwareminimum>
+		<firmwaremaximum>9.99.9</firmwaremaximum>
+		<toon2only>no</toon2only>
+		<allowdeletion>no</allowdeletion>
+	</app>
 </repository>
